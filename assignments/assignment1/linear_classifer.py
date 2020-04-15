@@ -1,6 +1,16 @@
 import numpy as np
 
 
+def exp_along_row(row):
+    row -= np.max(row) 
+    row = np.exp(row) / np.sum(np.exp(row))
+    return row
+
+def indexing_along_row(data):
+    probs , target_index = data
+    return probs[target_index]
+
+
 def softmax(predictions):
     '''
     Computes probabilities from scores
@@ -15,7 +25,21 @@ def softmax(predictions):
     '''
     # TODO implement softmax
     # Your final implementation shouldn't have any loops
-    raise Exception("Not implemented!")
+    
+    predictions_copy = predictions.copy()
+    #print(predictions_copy)
+    #print(predictions_copy.ndim)
+    if predictions_copy.ndim == 1:
+        ff = 0
+    else:
+        ff = 1
+        
+    probs = np.apply_along_axis( exp_along_row , ff , predictions_copy)
+    
+    # predictions -= np.max(predictions) 
+    # probs = np.exp(predictions) / np.sum(np.exp(predictions)) 
+    
+    return probs
 
 
 def cross_entropy_loss(probs, target_index):
@@ -33,7 +57,27 @@ def cross_entropy_loss(probs, target_index):
     '''
     # TODO implement cross-entropy
     # Your final implementation shouldn't have any loops
-    raise Exception("Not implemented!")
+
+    # loss = np.apply_along_axis( indexing_along_row , 0 , (probs, target_index) )
+    if probs.ndim == 1:
+        mask = np.zeros_like(probs)
+        mask[target_index] = 1
+        mask = mask.astype(bool)
+        #print('if')
+    else:
+        mask = np.zeros_like(probs)
+        mask[ np.arange(target_index.shape[0])  ,  target_index.reshape(target_index.shape[0] )] =1 
+        mask = mask == True
+        #print('else')
+    
+    #print(probs.shape)
+    #print(probs)
+    #print(type(mask))
+    #print(mask)
+    loss = probs[mask]
+    #print(loss)
+    
+    return (-1) * np.sum( np.log(loss) ) 
 
 
 def softmax_with_cross_entropy(predictions, target_index):
@@ -53,9 +97,34 @@ def softmax_with_cross_entropy(predictions, target_index):
     '''
     # TODO implement softmax with cross-entropy
     # Your final implementation shouldn't have any loops
-    raise Exception("Not implemented!")
+    
+    probs = softmax(predictions)
+    #print(probs)
+    #print(target_index)
+    loss = cross_entropy_loss(probs, target_index)
+    
+    if probs.ndim == 1:
+        target_mask = np.zeros_like(probs)
+        target_mask[target_index] = 1
+        #target_mask = target_mask.astype(bool)
+        #print('if')
+    else:
+        target_mask = np.zeros_like(probs)
+        target_mask[ np.arange(target_index.shape[0])  ,  target_index.reshape(target_index.shape[0] )] =1 
+        #mask = mask == True
+        #target_mask = target_index #== True
+        #print('else')
+    
+    dprediction = probs - target_mask
+    
+#     print(probs)
+#     print(target_mask)
+#     print("loss = " ,  loss ) 
+#     print(dprediction)
+#     print('======================================')
 
-    return loss, dprediction
+    return loss , dprediction
+
 
 
 def l2_regularization(W, reg_strength):
@@ -73,7 +142,8 @@ def l2_regularization(W, reg_strength):
 
     # TODO: implement l2 regularization and gradient
     # Your final implementation shouldn't have any loops
-    raise Exception("Not implemented!")
+    loss = 0.5 * reg_strength * np.sum(W**2)
+    grad = reg_strength * W
 
     return loss, grad
     
@@ -93,10 +163,19 @@ def linear_softmax(X, W, target_index):
 
     '''
     predictions = np.dot(X, W)
+    #print(predictions)
+    #print(predictions.shape)
 
     # TODO implement prediction and gradient over W
     # Your final implementation shouldn't have any loops
-    raise Exception("Not implemented!")
+    loss , dprediction = softmax_with_cross_entropy(predictions , target_index)
+    
+    dW = np.dot( X.T , dprediction)
+    
+    #print(loss)
+    #print(dprediction)
+    #print(dprediction.shape)
+    #print(dW)
     
     return loss, dW
 
@@ -137,10 +216,31 @@ class LinearSoftmaxClassifier():
             # Apply gradient to weights using learning rate
             # Don't forget to add both cross-entropy loss
             # and regularization!
-            raise Exception("Not implemented!")
+            
+#             print(shuffled_indices.shape)
+#             print(sections.shape)
+#             print(sections)
+#             print(len(batches_indices))
+#             print(batches_indices[0])
+            
+            for batch in batches_indices:
+                X_train = X[batch]
+                y_train = y[batch]
+                
+                loss, dW = linear_softmax(X_train, self.W, y_train)
+                reg_loss , reg_dW = l2_regularization(self.W, reg)
+                
+                loss = loss + reg_loss
+                dW = dW + reg_dW
+                
+                self.W = self.W - learning_rate * dW
+                
+                
+            loss_history.append(loss)
+
 
             # end
-            print("Epoch %i, loss: %f" % (epoch, loss))
+            #print("Epoch %i, loss: %f" % (epoch, loss))
 
         return loss_history
 
@@ -155,14 +255,20 @@ class LinearSoftmaxClassifier():
           y_pred, np.array of int (test_samples)
         '''
         y_pred = np.zeros(X.shape[0], dtype=np.int)
+        # print(y_pred.shape)
 
         # TODO Implement class prediction
         # Your final implementation shouldn't have any loops
-        raise Exception("Not implemented!")
-
-        return y_pred
-
-
+        predictions = np.dot(X , self.W)
+        predictions = softmax(predictions)
+        y_pred = np.argsort(predictions , axis = 1)# [: , 0:1]# [: , 0:self.k]
+        tst = np.argmax(predictions , axis = 1)
+#         print(predictions[:10])
+#         print(y_pred[:10])
+#         print(tst[:10])
+        
+        
+        return tst
 
                 
                                                           
