@@ -27,17 +27,12 @@ def softmax(predictions):
     # Your final implementation shouldn't have any loops
     
     predictions_copy = predictions.copy()
-    #print(predictions_copy)
-    #print(predictions_copy.ndim)
     if predictions_copy.ndim == 1:
         ff = 0
     else:
         ff = 1
         
     probs = np.apply_along_axis( exp_along_row , ff , predictions_copy)
-    
-    # predictions -= np.max(predictions) 
-    # probs = np.exp(predictions) / np.sum(np.exp(predictions)) 
     
     return probs
 
@@ -58,24 +53,16 @@ def cross_entropy_loss(probs, target_index):
     # TODO implement cross-entropy
     # Your final implementation shouldn't have any loops
 
-    # loss = np.apply_along_axis( indexing_along_row , 0 , (probs, target_index) )
     if probs.ndim == 1:
         mask = np.zeros_like(probs)
         mask[target_index] = 1
         mask = mask.astype(bool)
-        #print('if')
     else:
         mask = np.zeros_like(probs)
         mask[ np.arange(target_index.shape[0])  ,  target_index.reshape(target_index.shape[0] )] =1 
         mask = mask == True
-        #print('else')
     
-    #print(probs.shape)
-    #print(probs)
-    #print(type(mask))
-    #print(mask)
     loss = probs[mask]
-    #print(loss)
     
     return (-1) * np.sum( np.log(loss) ) 
 
@@ -99,32 +86,18 @@ def softmax_with_cross_entropy(predictions, target_index):
     # Your final implementation shouldn't have any loops
     
     probs = softmax(predictions)
-    #print(probs)
-    #print(target_index)
     loss = cross_entropy_loss(probs, target_index)
     
     if probs.ndim == 1:
         target_mask = np.zeros_like(probs)
         target_mask[target_index] = 1
-        #target_mask = target_mask.astype(bool)
-        #print('if')
     else:
         target_mask = np.zeros_like(probs)
         target_mask[ np.arange(target_index.shape[0])  ,  target_index.reshape(target_index.shape[0] )] =1 
-        #mask = mask == True
-        #target_mask = target_index #== True
-        #print('else')
     
     dprediction = probs - target_mask
-    
-#     print(probs)
-#     print(target_mask)
-#     print("loss = " ,  loss ) 
-#     print(dprediction)
-#     print('======================================')
 
     return loss , dprediction
-
 
 
 def l2_regularization(W, reg_strength):
@@ -163,19 +136,12 @@ def linear_softmax(X, W, target_index):
 
     '''
     predictions = np.dot(X, W)
-    #print(predictions)
-    #print(predictions.shape)
 
     # TODO implement prediction and gradient over W
     # Your final implementation shouldn't have any loops
     loss , dprediction = softmax_with_cross_entropy(predictions , target_index)
     
     dW = np.dot( X.T , dprediction)
-    
-    #print(loss)
-    #print(dprediction)
-    #print(dprediction.shape)
-    #print(dW)
     
     return loss, dW
 
@@ -217,12 +183,6 @@ class LinearSoftmaxClassifier():
             # Don't forget to add both cross-entropy loss
             # and regularization!
             
-#             print(shuffled_indices.shape)
-#             print(sections.shape)
-#             print(sections)
-#             print(len(batches_indices))
-#             print(batches_indices[0])
-            
             for batch in batches_indices:
                 X_train = X[batch]
                 y_train = y[batch]
@@ -238,10 +198,6 @@ class LinearSoftmaxClassifier():
                 
             loss_history.append(loss)
 
-
-            # end
-            #print("Epoch %i, loss: %f" % (epoch, loss))
-
         return loss_history
 
     def predict(self, X):
@@ -255,7 +211,6 @@ class LinearSoftmaxClassifier():
           y_pred, np.array of int (test_samples)
         '''
         y_pred = np.zeros(X.shape[0], dtype=np.int)
-        # print(y_pred.shape)
 
         # TODO Implement class prediction
         # Your final implementation shouldn't have any loops
@@ -263,10 +218,6 @@ class LinearSoftmaxClassifier():
         predictions = softmax(predictions)
         y_pred = np.argsort(predictions , axis = 1)# [: , 0:1]# [: , 0:self.k]
         tst = np.argmax(predictions , axis = 1)
-#         print(predictions[:10])
-#         print(y_pred[:10])
-#         print(tst[:10])
-        
         
         return tst
 

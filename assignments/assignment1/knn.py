@@ -119,18 +119,9 @@ class KNN:
         
         ind = np.argsort(dists , axis = 1)[: , 0:self.k]
         k_near_ind = self.train_y[ind]
-        # print(ind)
         for i in range(num_test):  
-            # TODO: Implement choosing best class based on k
-            # nearest training samples
-            # print(i)
             val , count = np.unique(k_near_ind[i] , return_counts=True )
-            # print(val)
-            # print(count)
-            # print(val[ np.argmax(count) ])
             pred[i] = val[ np.argmax(count) ]
-            # print(pred[i])
-            # print('===================================')
 
         return pred
 
@@ -147,7 +138,6 @@ class KNN:
            for every test sample
         '''
         num_test = dists.shape[0]
-#         num_test = dists.shape[0]
         pred = np.zeros(num_test, np.int)
         
         ind = np.argsort(dists , axis = 1)[: , 0:self.k]

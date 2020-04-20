@@ -12,27 +12,11 @@ def binary_classification_metrics(prediction, ground_truth):
     Returns:
     precision, recall, f1, accuracy - classification metrics
     '''
-    
-#     res_plus = prediction.astype(int) + ground_truth.astype(int)
-#     res_minus  = prediction.astype(int) - ground_truth.astype(int)
-#     res = np.array([res_plus , res_minus]).T
-#     val , count = np.unique(res , return_counts=True , axis = 0)
-    
-#     tn_mask = np.equal(val , [0,0]).all(axis = 1) 
-#     fp_mask = np.equal(val , [1,1]).all(axis = 1) 
-#     fn_mask = np.equal(val , [1,-1]).all(axis = 1) 
-#     tp_mask = np.equal(val , [2,0]).all(axis = 1) 
-    
-#     tn = count[tn_mask] 
-#     fp = count[fp_mask]
-#     fn = count[fn_mask]
-#     tp = count[tp_mask]
 
     tp = float(np.sum((prediction == 1) & (ground_truth == 1)))
     tn = float(np.sum((prediction == 0) & (ground_truth == 0)))
     fp = float(np.sum((prediction == 1) & (ground_truth == 0)))
     fn = float(np.sum((prediction == 0) & (ground_truth == 1)))
-
 
     precision = tp / (tp + fp)
     recall = tp / (tp + fn)
