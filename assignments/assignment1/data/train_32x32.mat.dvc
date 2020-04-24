@@ -1,0 +1,7 @@
+md5: e65015b291fd74e0eeaa86f5d3b2a5bf
+outs:
+- md5: e26dedcc434d2e4c54c9b2d4a06d8373
+  path: train_32x32.mat
+  cache: true
+  metric: false
+  persist: false

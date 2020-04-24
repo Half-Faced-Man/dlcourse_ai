@@ -1,0 +1,7 @@
+md5: 5dc6075b9843cedc00c68dcb70d00179
+outs:
+- md5: eb5a983be6a315427106f1b164d9cef3
+  path: test_32x32.mat
+  cache: true
+  metric: false
+  persist: false

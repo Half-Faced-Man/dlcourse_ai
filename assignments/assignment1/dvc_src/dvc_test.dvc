@@ -1,0 +1,16 @@
+md5: 2da794eb904133a9737d65c23eecd75a
+cmd: python dvc_src/test.py
+wdir: ..
+deps:
+- md5: 625b5911fb05359a7f247acb9c6a5426
+  path: dvc_src/test.py
+- md5: 5f1cd64e928a7e247fdefbda76d686e9
+  path: data/test_X.csv
+- md5: 440f0103b961d38cf91a51ca4d09997c
+  path: data/test_y.csv
+outs:
+- md5: 18e918b42753cdcdee9262cf2f7e97d7
+  path: data/accuracy.txt
+  cache: true
+  metric: true
+  persist: false

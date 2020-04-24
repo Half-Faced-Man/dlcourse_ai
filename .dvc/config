@@ -1,0 +1,4 @@
+[core]
+    remote = local
+['remote "local"']
+    url = /Users/a17409438/Documents/dlcourse_ai/assignments/assignment1/dvc_remote_data_folder

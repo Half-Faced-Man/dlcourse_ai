@@ -1,0 +1,16 @@
+md5: d7249d0cf7ce0af4f2e87fe1a012f8ca
+cmd: python dvc_src/train.py
+wdir: ..
+deps:
+- md5: 774aca4e4b054694bbfdc9e6910a7264
+  path: dvc_src/train.py
+- md5: 65c56220429b222eedf65593eafe1303
+  path: data/train_X.csv
+- md5: bb1e385bd5f51c0dbc44db42cee43bde
+  path: data/train_y.csv
+outs:
+- md5: 7745390aefef673ed38c364822c9dcca
+  path: model/dvc_knn_model
+  cache: true
+  metric: false
+  persist: false

@@ -1,0 +1,31 @@
+md5: 19af9a80a54dc512aa86e518dd553e6e
+cmd: python dvc_src/read_sorce_data.py
+wdir: ..
+deps:
+- md5: 75c74605f06bc246e981b9d4a54bd9fa
+  path: dvc_src/read_sorce_data.py
+- md5: e26dedcc434d2e4c54c9b2d4a06d8373
+  path: data/train_32x32.mat
+- md5: eb5a983be6a315427106f1b164d9cef3
+  path: data/test_32x32.mat
+outs:
+- md5: 65c56220429b222eedf65593eafe1303
+  path: data/train_X.csv
+  cache: true
+  metric: false
+  persist: false
+- md5: bb1e385bd5f51c0dbc44db42cee43bde
+  path: data/train_y.csv
+  cache: true
+  metric: false
+  persist: false
+- md5: 5f1cd64e928a7e247fdefbda76d686e9
+  path: data/test_X.csv
+  cache: true
+  metric: false
+  persist: false
+- md5: 440f0103b961d38cf91a51ca4d09997c
+  path: data/test_y.csv
+  cache: true
+  metric: false
+  persist: false
