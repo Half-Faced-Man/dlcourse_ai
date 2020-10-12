@@ -5,13 +5,11 @@ def check_gradient(f, x, delta=1e-5, tol=1e-4):
     """
     Checks the implementation of analytical gradient by comparing
     it to numerical gradient using two-point formula
-
     Arguments:
       f: function that receives x and computes value and gradient
       x: np array, initial point where gradient is checked
       delta: step to compute numerical gradient
       tol: tolerance for comparing numerical and analytical gradient
-
     Return:
       bool indicating whether gradients match or not
     """
@@ -27,10 +25,14 @@ def check_gradient(f, x, delta=1e-5, tol=1e-4):
     while not it.finished:
         ix = it.multi_index
         analytic_grad_at_ix = analytic_grad[ix]
-        numeric_grad_at_ix = 0
+        # numeric_grad_at_ix = 0
 
         # TODO Copy from previous assignment
-        raise Exception("Not implemented!")
+        # raise Exception("Not implemented!")
+        delta_dimension = np.zeros(x.shape)
+        delta_dimension[ix] = delta
+        
+        numeric_grad_at_ix = (f(x + delta_dimension)[0] - f(x - delta_dimension)[0])/(2*delta)
 
         if not np.isclose(numeric_grad_at_ix, analytic_grad_at_ix, tol):
             print("Gradients are different at %s. Analytic: %2.5f, Numeric: %2.5f" % (
@@ -123,8 +125,9 @@ def check_model_gradient(model, X, y,
     for param_key in params:
         print("Checking gradient for %s" % param_key)
         param = params[param_key]
+        print(param)
         initial_w = param.value
-
+        
         def helper_func(w):
             param.value = w
             loss = model.compute_loss_and_gradients(X, y)
